@@ -2,9 +2,7 @@ const User = require('../models/User');
 const Role = require('../models/Role');
 const jwt = require('jsonwebtoken');
 
-exports.createUser = async (req, res) => {
-  const { name, email, password, roles } = req.body;
-
+exports.createUser = async (name, email, password, role, res) => {
   try {
     let user = await User.findOne({ email });
     if (user) {
@@ -16,15 +14,18 @@ exports.createUser = async (req, res) => {
     if(password.length < 8) {
       return res.status(400).json({ msg: 'Password must be at least 8 characters long' });
     }
-    
+
     user = new User({
       name,
       email,
       password,
     });
 
-    if (roles) {
-      const assignedRoles = await Role.find({ name: { $in: roles } });
+    if (role) {
+      const assignedRoles = await Role.find({ name: { $in: role } });
+      if(assignedRoles === undefined || assignedRoles.length == 0) {
+        return res.status(400).json({ msg: 'Role not found' });
+      }
       user.roles = assignedRoles.map((role) => role._id);
     } else {
       const role = await Role.findOne({ name: 'User' });
@@ -113,3 +114,13 @@ exports.deleteUser = async (req, res) => {
     res.status(500).send('Server Error');
   }
 };
+
+exports.getAllUsers = async (req, res) => {
+  try {
+    const users = await User.find().populate('roles');
+    res.json(users);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server Error');
+  }
+}
