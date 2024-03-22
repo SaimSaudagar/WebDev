@@ -5,7 +5,8 @@ const { createUser } = require('./userController');
 require('dotenv').config();
 
 exports.signup = async (req, res) => {
-  createUser(req, res);
+  const { name, email, password, role } = req.body;
+  createUser( name, email, password, role, res);
 };
 
 exports.login = async (req, res) => {
