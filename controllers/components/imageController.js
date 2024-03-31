@@ -1,13 +1,19 @@
+const { isValidObjectId } = require('mongoose');
 const Image = require('../../models/components/Image');
 const Page = require('../../models/Page');
 
-// Create an Image and update the Page document
+
 exports.createImage = async (req, res) => {
   try {
-    const image = new Image(req.body);
+    const { url, altText, size, alignment, page } = req.body;
+
+    if(!isValidObjectId(page)) {
+      return res.status(400).json({ message: 'Invalid page ID' });
+    }
+
+    const image = new Image({ url, altText, size, alignment, page });
     await image.save();
 
-    // Update the Page document with the new Image's ID and type
     await Page.findByIdAndUpdate(req.body.page, {
       $push: { content: { componentId: image._id, componentType: 'Image' } }
     });
@@ -18,7 +24,6 @@ exports.createImage = async (req, res) => {
   }
 };
 
-// Delete an Image and update the Page document
 exports.deleteImage = async (req, res) => {
   try {
     const image = await Image.findById(req.params.id);
@@ -26,7 +31,6 @@ exports.deleteImage = async (req, res) => {
       return res.status(404).json({ message: 'Image not found' });
     }
 
-    // Remove the Image reference from the Page's content array
     await Page.findByIdAndUpdate(image.page, {
       $pull: { content: { componentId: image._id, componentType: 'Image' } }
     });
@@ -39,7 +43,6 @@ exports.deleteImage = async (req, res) => {
   }
 };
 
-// Retrieve an Image
 exports.getImage = async (req, res) => {
   try {
     const image = await Image.findById(req.params.id);
@@ -52,10 +55,11 @@ exports.getImage = async (req, res) => {
   }
 };
 
-// Update an Image
 exports.updateImage = async (req, res) => {
   try {
-    const image = await Image.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    const {url, altText, size, alignment} = req.body;
+
+    const image = await Image.findByIdAndUpdate(req.params.id, {url, altText, size, alignment}, { new: true });
     if (!image) {
       return res.status(404).json({ message: 'Image not found' });
     }

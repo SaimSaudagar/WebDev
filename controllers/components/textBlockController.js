@@ -2,7 +2,6 @@ const { isValidObjectId } = require('mongoose');
 const TextBlock = require('../../models/components/TextBlock');
 const Page = require('../../models/Page');
 
-// Create a Text Block and update the Page document
 exports.createTextBlock = async (req, res) => {
   try {
     const { content, font, size, color, alignment, page } = req.body;
@@ -29,7 +28,6 @@ exports.createTextBlock = async (req, res) => {
   }
 };
 
-// Delete a Text Block and update the Page document
 exports.deleteTextBlock = async (req, res) => {
   try {
     const textBlock = await TextBlock.findById(req.params.id);
@@ -37,7 +35,6 @@ exports.deleteTextBlock = async (req, res) => {
       return res.status(404).json({ message: 'Text Block not found' });
     }
 
-    // Remove the Text Block reference from the Page's content array
     await Page.findByIdAndUpdate(textBlock.page, {
       $pull: { content: { componentId: textBlock._id, componentType: 'TextBlock' } }
     });
@@ -50,7 +47,6 @@ exports.deleteTextBlock = async (req, res) => {
   }
 };
 
-// Retrieve a Text Block
 exports.getTextBlock = async (req, res) => {
   try {
     const textBlock = await TextBlock.findById(req.params.id);
@@ -63,10 +59,11 @@ exports.getTextBlock = async (req, res) => {
   }
 };
 
-// Update a Text Block
 exports.updateTextBlock = async (req, res) => {
   try {
-    const textBlock = await TextBlock.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    const { content, font, size, color, alignment } = req.body;
+
+    const textBlock = await TextBlock.findByIdAndUpdate(req.params.id, {content, font, size, color, alignment}, { new: true });
     if (!textBlock) {
       return res.status(404).json({ message: 'Text Block not found' });
     }
@@ -76,7 +73,6 @@ exports.updateTextBlock = async (req, res) => {
   }
 };
 
-// List all Text Blocks for a Page
 exports.listTextBlocks = async (req, res) => {
   try {
     const textBlocks = await TextBlock.find({ page: req.params.pageId });
