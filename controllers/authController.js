@@ -24,7 +24,7 @@ exports.login = async (req, res) => {
       return res.status(400).json({ msg: 'Invalid Credentials' });
     }
 
-    const role = await Role.findById(user.roles);
+    const roe = await Role.findById(user.roles);
 
     const payload = {
       user: {
