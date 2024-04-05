@@ -1,4 +1,4 @@
-const Video = require('../models/Video');
+const Video = require('../../models/components/Video');
 
 exports.createVideo = async (req, res) => {
   const { title, url, description } = req.body;

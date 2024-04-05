@@ -7,6 +7,6 @@ const {
 } = require('../controllers/analyticsEventController');
 
 router.post('/track', authMiddleware.authenticateAdmin, trackEvent);
-router.get('/page-views', authMiddleware.authenticateAdmin, authMiddleware, pageViews);
+router.get('/page-views', authMiddleware.authenticateAdmin, pageViews);
 
 module.exports = router;
