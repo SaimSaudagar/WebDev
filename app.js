@@ -24,6 +24,7 @@ app.use('/api/text-block', require('./routes/components/textBlockRoutes'));
 app.use('/api/image-block', require('./routes/components/imageRoutes'));
 app.use('/api/cat-button', require('./routes/components/ctaButtonRoutes'));
 app.use('/api/carousel', require('./routes/components/carouselRoutes'));
+app.use('/api/analytics', require('./routes/analyticsEventRoutes'));
 
 const PORT = process.env.PORT || 3000;
 
