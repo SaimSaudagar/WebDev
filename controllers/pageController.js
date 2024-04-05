@@ -38,7 +38,8 @@ exports.createPage = async (req, res) => {
 
 exports.getPage = async (req, res) => {
     try {
-        const page = await Page.findOne({ slug: req.params.slug }).lean();
+        console.log(req.params.slug);
+        const page = await Page.findOne({ slug: "/" + req.params.slug }).lean();
         if (!page) {
             return res.status(404).json({ message: 'Page not found' });
         }
@@ -89,12 +90,29 @@ exports.deletePage = async (req, res) => {
 exports.listPages = async (req, res) => {
     try {
         const pages = await Page.find({});
-        // Optionally, populate content for each page in the list
-        for (let page of pages) {
-            page.content = await populatePageContent(page);
-        }
+        // // Optionally, populate content for each page in the list
+        // for (let page of pages) {
+        //     page.content = await populatePageContent(page);
+        // }
         res.status(200).json(pages);
     } catch (error) {
         res.status(400).json({ error: error.message });
     }
 };
+
+exports.changeContentOrder = async (req, res) => {
+    try {
+        const { content } = req.body;
+        const page = await Page.findOne({ slug: "/" + req.params.slug });
+        if (!page) {
+            return res.status(404).json({ message: 'Page not found' });
+        }
+        console.log(req.body);
+        page.content = req.body;
+        await page.save();
+        res.status(200).json({ message: 'Page content order updated successfully', page });
+    }
+    catch (error) {
+        res.status(400).json({ error: error.message });
+    }
+}

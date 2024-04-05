@@ -8,9 +8,9 @@ const {
     deleteImage
 } = require('../../controllers/components/imageController');
 
-router.post('/image', authMiddleware, createImage);
-router.get('/image/:id', authMiddleware, getImage);
-router.put('/image/:id', authMiddleware, updateImage);
-router.delete('/image/:id', authMiddleware, deleteImage);
+router.post('/image', authMiddleware.authenticateAdmin, createImage);
+router.get('/image/:id', authMiddleware.authenticateAdmin, getImage);
+router.put('/image/:id', authMiddleware.authenticateAdmin, updateImage);
+router.delete('/image/:id', authMiddleware.authenticateAdmin, deleteImage);
 
 module.exports = router;

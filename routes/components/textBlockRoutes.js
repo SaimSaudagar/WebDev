@@ -9,10 +9,10 @@ const {
     listTextBlocks,
     } = require('../../controllers/components/textBlockController');
 
-router.post('/', authMiddleware, createTextBlock);
-router.get('/:id', authMiddleware, getTextBlock);
-router.put('/:id', authMiddleware, updateTextBlock);
-router.delete('/:id', authMiddleware, deleteTextBlock);
-router.get('/:pageId', authMiddleware, listTextBlocks);
+router.post('/', authMiddleware.authenticateAdmin, createTextBlock);
+router.get('/:id', authMiddleware.authenticateAdmin, getTextBlock);
+router.put('/:id', authMiddleware.authenticateAdmin, updateTextBlock);
+router.delete('/:id', authMiddleware.authenticateAdmin, deleteTextBlock);
+router.get('/:pageId', authMiddleware.authenticateAdmin, listTextBlocks);
 
 module.exports = router;

@@ -9,10 +9,10 @@ const {
   getAllUsers
 } = require('../controllers/userController');
 
-router.post('/', authMiddleware, createUser);
-router.get('/:id', authMiddleware, getUser);
-router.put('/:id', authMiddleware, updateUser);
-router.delete('/:id', authMiddleware, deleteUser);
-router.get('/', authMiddleware, getAllUsers);
+router.post('/', authMiddleware.authenticateAdmin, createUser);
+router.get('/:id', authMiddleware.authenticateAdmin, getUser);
+router.put('/:id', authMiddleware.authenticateAdmin, updateUser);
+router.delete('/:id', authMiddleware.authenticateAdmin, deleteUser);
+router.get('/', authMiddleware.authenticateAdmin, getAllUsers);
 
 module.exports = router;
